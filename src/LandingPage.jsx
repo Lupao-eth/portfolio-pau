@@ -13,14 +13,22 @@ export default function LandingPage() {
     setTimeout(() => setCopiedStates({ ...copiedStates, [key]: false }), 2000);
   };
 
-  const handleDownloadResume = () => {
-    const link = document.createElement('a');
-    link.href = resumePdf;
-    link.setAttribute('download', 'Paulo_Saclolo_Resume.pdf');
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode.removeChild(link);
-  };
+  const handleDownloadResume = async () => {
+  const response = await fetch(resumePdf);
+  const blob = await response.blob();
+
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Paulo_Saclolo_Resume.pdf';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  window.URL.revokeObjectURL(url);
+};
 
   const scrollToProjects = () => {
     const element = document.getElementById('projects');
